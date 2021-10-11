@@ -1,18 +1,24 @@
 /*
+A Cyber Management System for the elaboration of User System 
+by A.R.M.Kiyas(ITT/2019/047)
 
-
+git repository of this project:- https://github.com/ARMkiyas/Cyber-system for more info
 
 */
 
+
+//including needed header files
 #include <stdio.h>
 #include <conio.h>
 #include <stdlib.h>
 #include <windows.h>
 #include <string.h>
 
+// defining file name in global namespace 
 #define FileName "./user_data.dat"
+//creating a custom string datatype 31 bytes from character array
 typedef char string[255];
-
+//creating a structure for store login information of the user
 struct loginfo
 {
 	string user_name;
@@ -24,7 +30,7 @@ struct loginfo
 	string dob;
 };
 
-//default admin details
+//Default Admin Account information
 
 struct admin
 {
@@ -33,6 +39,7 @@ struct admin
 } admin = {"Admin", "Pass"};
 
 struct loginfo login;
+//Declaration of all function  
 void write_data_to_file(struct loginfo *temp);
 void create_user();
 void Admin();
@@ -58,6 +65,7 @@ int main()
 	return 0;
 }
 
+// this function is used to move cursor to requested location(requered x position and y position) in console 
 void gotoxy(int x, int y)
 {
 
@@ -70,6 +78,7 @@ void gotoxy(int x, int y)
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
+//Cyber system starting funtion
 void load()
 {
 	int r, c, q;
@@ -84,7 +93,6 @@ void load()
 	}
 	system("cls");
 }
-
 void welcome()
 {
 	gotoxy(40, 2);
@@ -130,6 +138,7 @@ void login_screen()
 	auth();
 }
 
+//this function is used authenticate user input from the login screen whether username,password are correct 
 void auth()
 {
 	if (login.user_name == NULL || login.password == NULL)
@@ -147,21 +156,21 @@ void auth()
 
 	error("Invalid User_name or Password");
 }
-
+// this function is used authenticate user accounts from .dat file
 int user_auth()
 {
 
 	FILE *f;
 
 	struct loginfo temp;
-
+	//opening user_data.dat file to f file pointer
 	f = fopen(FileName, "rb");
 
 	if (f == NULL)
 	{
 		error("User details not found");
 	}
-
+	// reading all data(user datas) on the file one by one for authentication
 	while (1)
 	{
 		fread(&temp, sizeof(temp), 1, f);
@@ -172,15 +181,15 @@ int user_auth()
 		else if (!strcmp(temp.user_name, login.user_name) && !strcmp(temp.password, login.password))
 		{
 			login = temp;
+			fclose(f);
 			user();
 		}
 	}
 
 	fclose(f);
-
 	return 0;
 }
-
+//this function is used to let the Admin choose some functionality which related to the Admin only
 void Admin()
 {
 	system("cls");
@@ -226,7 +235,7 @@ void Admin()
 		break;
 	}
 }
-
+// this function is used show user dashboard with some options
 void user()
 {
 
@@ -275,7 +284,7 @@ void user()
 		break;
 	}
 }
-
+// this function is used show all about specific user who is logged in to the system
 void user_info()
 {
 	system("cls");
@@ -307,7 +316,7 @@ void user_info()
 	getch();
 	user();
 }
-
+// this function related to the Admin which is creating new users 
 void create_user()
 {
 	while (1)
@@ -338,11 +347,12 @@ void create_user()
 		gotoxy(42, 11);
 		printf("Create a default password for user: ");
 		scanf("%s", &temp.password);
-
+		// here validating user name for write to file whether it's already exitst or not 
 		while (1)
 		{
 			int check = 0;
 			FILE *f = fopen(FileName, "rb");
+			// here checking gived username is Admin's username or not
 			if (!strcmp(temp.user_name, "Admin") || !strcmp(temp.user_name, "admin"))
 			{
 				goto enter_again;
@@ -350,6 +360,7 @@ void create_user()
 			if (f != NULL)
 			{
 				struct loginfo t;
+				//here reading all data one by one which is already in the user_data.dat file to validate 
 				while (1)
 				{
 					fread(&t, sizeof(struct loginfo), 1, f);
@@ -359,6 +370,7 @@ void create_user()
 					}
 					else if (!strcmp(t.user_name, temp.user_name))
 					{
+						//here if the admin entered user name is already exist, giveing a chance to change  
 					enter_again:
 						check = 1;
 						system("cls");
@@ -378,7 +390,7 @@ void create_user()
 					break;
 			}
 		}
-
+		// here after the validation ask Confirmation from admin to write to the file or retry or exit
 		system("cls");
 		gotoxy(40, 3);
 		printf("************** Confirmation **************");
@@ -414,14 +426,16 @@ void create_user()
 			Admin();
 	}
 }
-
+// this function is working for create_user() funtion to write the user data to .dat file
 void write_data_to_file(struct loginfo *temp)
 {
+	//here opening the binary file in append mode to write the user data to the file if the file is not exist, it will create a file to write
 	FILE *f = fopen(FileName, "ab");
 	if (f == NULL)
 	{
 		error("OOps..!,There is something wrong with the file creation");
 	}
+	//here writing entered user data to the file
 	fwrite(temp, sizeof(struct loginfo), 1, f);
 	fclose(f);
 	system("cls");
@@ -439,7 +453,7 @@ void write_data_to_file(struct loginfo *temp)
 	}
 	Admin();
 }
-
+// this function is used to display all users information which is the funtion of admin
 void display_all_users()
 {
 	system("cls");
@@ -447,14 +461,16 @@ void display_all_users()
 	gotoxy(0, 3);
 	printf("********************************************All users information******************************************");
 	FILE *f;
+	//creating temporary structure for store user data
 	struct loginfo temp;
-
 	f = fopen("./user_data.dat", "rb");
 	if (f == NULL)
 	{
 		gotoxy(pos_x, pos_y);
-		printf("************** User date not exist **************");
-		exit(1);
+		printf("User data file not exist, Enter any key to go back");
+		fflush(stdin);
+		getch();
+		Admin();
 	}
 
 	while (1)
@@ -508,7 +524,7 @@ void display_all_users()
 	getch();
 	Admin();
 }
-
+// this function is created to used show the error message whare is places some unavoidable error occur
 void error(char *message)
 {
 	system("setterm -bold on");
@@ -530,7 +546,7 @@ void error(char *message)
 	}
 	login_screen();
 }
-
+// this function is used to exit from system without any errors or other problem
 void exiting()
 {
 	int r, q;
