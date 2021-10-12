@@ -2,10 +2,9 @@
 A Cyber Management System for the elaboration of User System 
 by A.R.M.Kiyas(ITT/2019/047)
 
-git repository of this project:- https://github.com/ARMkiyas/Cyber-system for more info
+My git repository of this project:- https://github.com/ARMkiyas/Cyber-system for more info
 
 */
-
 
 //including needed header files
 #include <stdio.h>
@@ -14,7 +13,7 @@ git repository of this project:- https://github.com/ARMkiyas/Cyber-system for mo
 #include <windows.h>
 #include <string.h>
 
-// defining file name in global namespace 
+// defining file name in global namespace
 #define FileName "./user_data.dat"
 //creating a custom string datatype 31 bytes from character array
 typedef char string[255];
@@ -39,7 +38,7 @@ struct admin
 } admin = {"Admin", "Pass"};
 
 struct loginfo login;
-//Declaration of all function  
+//Declaration of all function
 void write_data_to_file(struct loginfo *temp);
 void create_user();
 void Admin();
@@ -65,7 +64,7 @@ int main()
 	return 0;
 }
 
-// this function is used to move cursor to requested location(requered x position and y position) in console 
+// this function is used to move cursor to requested location(requered x position and y position) in console
 void gotoxy(int x, int y)
 {
 
@@ -138,7 +137,7 @@ void login_screen()
 	auth();
 }
 
-//this function is used authenticate user input from the login screen whether username,password are correct 
+//this function is used authenticate user input from the login screen whether username,password are correct
 void auth()
 {
 	if (login.user_name == NULL || login.password == NULL)
@@ -316,7 +315,7 @@ void user_info()
 	getch();
 	user();
 }
-// this function related to the Admin which is creating new users 
+// this function related to the Admin which is creating new users
 void create_user()
 {
 	while (1)
@@ -347,7 +346,7 @@ void create_user()
 		gotoxy(42, 11);
 		printf("Create a default password for user: ");
 		scanf("%s", &temp.password);
-		// here validating user name for write to file whether it's already exitst or not 
+		// here validating user name for write to file whether it's already exitst or not
 		while (1)
 		{
 			int check = 0;
@@ -360,7 +359,7 @@ void create_user()
 			if (f != NULL)
 			{
 				struct loginfo t;
-				//here reading all data one by one which is already in the user_data.dat file to validate 
+				//here reading all data one by one which is already in the user_data.dat file to validate
 				while (1)
 				{
 					fread(&t, sizeof(struct loginfo), 1, f);
@@ -370,7 +369,7 @@ void create_user()
 					}
 					else if (!strcmp(t.user_name, temp.user_name))
 					{
-						//here if the admin entered user name is already exist, giveing a chance to change  
+						//here if the admin entered user name is already exist, giveing a chance to change
 					enter_again:
 						check = 1;
 						system("cls");
@@ -385,10 +384,10 @@ void create_user()
 						break;
 					}
 				}
-				fclose(f);
-				if (check == 0)
-					break;
 			}
+			fclose(f);
+			if (check == 0)
+				break;
 		}
 		// here after the validation ask Confirmation from admin to write to the file or retry or exit
 		system("cls");
