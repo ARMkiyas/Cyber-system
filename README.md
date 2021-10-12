@@ -1,4 +1,4 @@
-# Cyber-system
+# cyber management system by A.R.M.Kiyas(ITT/2019/047)
 For the best experience, please run Cyber_system.exe executable file;
  
 if you have any problems with Compile and Run the program, please trun off your antivirus(real time protection) software.
